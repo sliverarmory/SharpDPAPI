@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+    branches: ["master"]
+
+jobs:
+
+  linux-windows-build:
+    name: CSharp Build
+    if: startsWith( github.ref, 'refs/tags/v')
+    runs-on: windows-2019
+    timeout-minutes: 45
+    steps:
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+  
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Git Fetch Tags
+      run: git fetch --prune --unshallow --tags -f
+
+    - name: Download Tools
+      run: |
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        Invoke-WebRequest -Uri https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe -OutFile jq.exe
+        Invoke-WebRequest -Uri https://github.com/moloch--/minisign/releases/download/v0.2.1/minisign.exe -OutFile minisign.exe
+    - name: MSBuild
+      run: |
+        nuget.exe restore SharpDPAPI.sln
+        msbuild.exe SharpDPAPI.sln /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=compiled/
+    - name: Build Package
+      # Powershell is utter fucking trash.
+      run: |
+        pwd
+        ls
+        $Version = git.exe describe --tags --abbrev=0
+        $Version = "`"$Version`""
+
+        cd SharpChrome
+        Get-Content -Path alias.json | .\jq.exe ".version |= `"$Version`"" > ./compiled/alias.json
+        Copy-Item -Path ..\LICENSE.txt -Destination compiled\LICENSE
+        cd compiled
+        tar.exe -czvf ..\SharpChrome.tar.gz .
+
+        cd ..\..\SharpDPAPI
+        Get-Content -Path alias.json | .\jq.exe ".version |= `"$Version`"" > ./compiled/alias.json
+        Copy-Item -Path ..\LICENSE.txt -Destination compiled\LICENSE
+        cd compiled
+        tar.exe -czvf ..\SharpChrome.tar.gz .
+    - name: Sign Package
+      run: |
+        Write-Output "${{ secrets.MINISIGN_PRIVATE_KEY }}" > minisign.key
+        $Content1 = Get-Content -Path ./compiled/alias.json
+        $Bytes = [System.Text.Encoding]::UTF8.GetBytes($Content1)
+        $Encoded = [System.Convert]::ToBase64String($Bytes)
+        .\minisign.exe -s minisign.key -S -m SharpChrome.tar.gz -t "$Encoded" -x SharpChrome.minisig
+        .\minisign.exe -s minisign.key -S -m SharpDPAPI.tar.gz -t "$Encoded" -x SharpDPAPI.minisig
+    - name: "Publish Release"
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: false
+        files: |
+          SharChrome.minisig
+          SharChrome.tar.gz
+          SharDPAPI.minisig
+          SharDPAPI.tar.gz
