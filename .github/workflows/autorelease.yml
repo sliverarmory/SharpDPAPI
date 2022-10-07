@@ -41,13 +41,13 @@ jobs:
         $Version = "`"$Version`""
 
         cd SharpChrome
-        Get-Content -Path alias.json | .\jq.exe ".version |= `"$Version`"" > ./compiled/alias.json
+        Get-Content -Path alias.json | ..\.\jq.exe ".version |= `"$Version`"" > ./compiled/alias.json
         Copy-Item -Path ..\LICENSE.txt -Destination compiled\LICENSE
         cd compiled
         tar.exe -czvf ..\SharpChrome.tar.gz .
 
         cd ..\..\SharpDPAPI
-        Get-Content -Path alias.json | .\jq.exe ".version |= `"$Version`"" > ./compiled/alias.json
+        Get-Content -Path alias.json | ..\.\jq.exe ".version |= `"$Version`"" > ./compiled/alias.json
         Copy-Item -Path ..\LICENSE.txt -Destination compiled\LICENSE
         cd compiled
         tar.exe -czvf ..\SharpChrome.tar.gz .
