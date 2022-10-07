@@ -54,10 +54,13 @@ jobs:
     - name: Sign Package
       run: |
         Write-Output "${{ secrets.MINISIGN_PRIVATE_KEY }}" > minisign.key
-        $Content1 = Get-Content -Path ./compiled/alias.json
+        $Content1 = Get-Content -Path ./SharpChrome/compiled/alias.json
         $Bytes = [System.Text.Encoding]::UTF8.GetBytes($Content1)
         $Encoded = [System.Convert]::ToBase64String($Bytes)
         .\minisign.exe -s minisign.key -S -m SharpChrome.tar.gz -t "$Encoded" -x SharpChrome.minisig
+        $Content1 = Get-Content -Path ./SharpDPAPI/compiled/alias.json
+        $Bytes = [System.Text.Encoding]::UTF8.GetBytes($Content1)
+        $Encoded = [System.Convert]::ToBase64String($Bytes)
         .\minisign.exe -s minisign.key -S -m SharpDPAPI.tar.gz -t "$Encoded" -x SharpDPAPI.minisig
     - name: "Publish Release"
       uses: "marvinpinto/action-automatic-releases@latest"
