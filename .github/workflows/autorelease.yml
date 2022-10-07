@@ -44,13 +44,13 @@ jobs:
         Get-Content -Path alias.json | ..\.\jq.exe ".version |= `"$Version`"" > ./compiled/alias.json
         Copy-Item -Path ..\LICENSE -Destination compiled\LICENSE
         cd compiled
-        tar.exe -czvf ..\SharpChrome.tar.gz .
+        tar.exe -czvf ..\..\SharpChrome.tar.gz .
 
         cd ..\..\SharpDPAPI
         Get-Content -Path alias.json | ..\.\jq.exe ".version |= `"$Version`"" > ./compiled/alias.json
         Copy-Item -Path ..\LICENSE -Destination compiled\LICENSE
         cd compiled
-        tar.exe -czvf ..\SharpChrome.tar.gz .
+        tar.exe -czvf ..\..\SharpChrome.tar.gz .
     - name: Sign Package
       run: |
         Write-Output "${{ secrets.MINISIGN_PRIVATE_KEY }}" > minisign.key
