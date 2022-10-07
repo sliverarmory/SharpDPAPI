@@ -1,7 +1,7 @@
 {
   "name": "SharpChrome",
   "version": "v0.0.0",
-  "command_name": "SharpChrome",
+  "command_name": "sharpchrome",
   "original_author": "GhostPack",
   "repo_url": "https://github.com/sliverarmory/SharpDPAPI",
   "help": "adaptation of work from @gentilkiwi and @djhohnstein, specifically his SharpChrome project",

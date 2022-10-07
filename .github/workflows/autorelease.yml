@@ -44,31 +44,31 @@ jobs:
         Get-Content -Path alias.json | ..\.\jq.exe ".version |= `"$Version`"" > ./compiled/alias.json
         Copy-Item -Path ..\LICENSE -Destination compiled\LICENSE
         cd compiled
-        tar.exe -czvf ..\..\SharpChrome.tar.gz .
+        tar.exe -czvf ..\..\sharpchrome.tar.gz .
 
         cd ..\..\SharpDPAPI
         Get-Content -Path alias.json | ..\.\jq.exe ".version |= `"$Version`"" > ./compiled/alias.json
         Copy-Item -Path ..\LICENSE -Destination compiled\LICENSE
         cd compiled
-        tar.exe -czvf ..\..\SharpDPAPI.tar.gz .
+        tar.exe -czvf ..\..\sharpdpapi.tar.gz .
     - name: Sign Package
       run: |
         Write-Output "${{ secrets.MINISIGN_PRIVATE_KEY }}" > minisign.key
         $Content1 = Get-Content -Path ./SharpChrome/compiled/alias.json
         $Bytes = [System.Text.Encoding]::UTF8.GetBytes($Content1)
         $Encoded = [System.Convert]::ToBase64String($Bytes)
-        .\minisign.exe -s minisign.key -S -m SharpChrome.tar.gz -t "$Encoded" -x SharpChrome.minisig
+        .\minisign.exe -s minisign.key -S -m sharpchrome.tar.gz -t "$Encoded" -x sharpchrome.minisig
         $Content1 = Get-Content -Path ./SharpDPAPI/compiled/alias.json
         $Bytes = [System.Text.Encoding]::UTF8.GetBytes($Content1)
         $Encoded = [System.Convert]::ToBase64String($Bytes)
-        .\minisign.exe -s minisign.key -S -m SharpDPAPI.tar.gz -t "$Encoded" -x SharpDPAPI.minisig
+        .\minisign.exe -s minisign.key -S -m sharpdpapi.tar.gz -t "$Encoded" -x sharpdpapi.minisig
     - name: "Publish Release"
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         prerelease: false
         files: |
-          SharpChrome.minisig
-          SharpChrome.tar.gz
-          SharpDPAPI.minisig
-          SharpDPAPI.tar.gz
+          sharpchrome.minisig
+          sharpchrome.tar.gz
+          sharpdpapi.minisig
+          sharpdpapi.tar.gz

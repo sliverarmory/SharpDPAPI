@@ -1,25 +1,25 @@
 {
-    "name": "SharpDPAPI",
-    "version": "v0.0.0",
-    "command_name": "SharpDPAPI",
-    "original_author": "GhostPack",
-    "repo_url": "https://github.com/sliverarmory/SharpDPAPI",
-    "help": "# port of some DPAPI functionality from @gentilkiwi's Mimikatz project",
-    "entrypoint": "Main",
-    "allow_args": true,
-    "default_args": "-h",
-    "is_reflective": false,
-    "is_assembly": true,
-    "files": [
-      {
-        "os": "windows",
-        "arch": "amd64",
-        "path": "SharpDPAPI.exe"
-      },
-      {
-        "os": "windows",
-        "arch": "386",
-        "path": "SharpDPAPI.exe"
-      }
-    ]
-  }
+  "name": "SharpDPAPI",
+  "version": "v0.0.0",
+  "command_name": "sharpdpapi",
+  "original_author": "GhostPack",
+  "repo_url": "https://github.com/sliverarmory/SharpDPAPI",
+  "help": "# port of some DPAPI functionality from @gentilkiwi's Mimikatz project",
+  "entrypoint": "Main",
+  "allow_args": true,
+  "default_args": "-h",
+  "is_reflective": false,
+  "is_assembly": true,
+  "files": [
+    {
+      "os": "windows",
+      "arch": "amd64",
+      "path": "SharpDPAPI.exe"
+    },
+    {
+      "os": "windows",
+      "arch": "386",
+      "path": "SharpDPAPI.exe"
+    }
+  ]
+}
