@@ -68,7 +68,7 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         prerelease: false
         files: |
-          SharChrome.minisig
-          SharChrome.tar.gz
-          SharDPAPI.minisig
-          SharDPAPI.tar.gz
+          SharpChrome.minisig
+          SharpChrome.tar.gz
+          SharpDPAPI.minisig
+          SharpDPAPI.tar.gz
